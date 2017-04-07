@@ -11,8 +11,9 @@ This is a simple python script to querry infos form Opsgenie and send them to gr
 
 The minimal command to use is :
 ```
-./opsgenie-to-graphite.py
+./opsgenie-to-graphite.py -c "customer_name"
 ```
+The only required parameter is the "-c" which is the name of the customer
 
 You have some parameters that you can specify if needed but they all have default values :
 * the '-b' which is the backend that you want to send your data to, the default backend is set to [graphite](http://graphite.readthedocs.io)
