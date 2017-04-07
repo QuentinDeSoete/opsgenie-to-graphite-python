@@ -32,7 +32,7 @@ args = parser.parse_args()
 backend=args.b
 schema=args.s
 backend_addr=args.H
-backend_port=args.p
+backend_port=args.P
 customer=args.c
 
 
@@ -46,7 +46,7 @@ try:
 			if get_alert_response.system_data.has_key('closedBy'):
 				count_closed+=get_alert_response.count
 			else:
-				count_open+=get_alert_response.count
+				count_open+=1
 except OpsGenieError as err:
 	print "[ERROR]", err.message
 
