@@ -8,15 +8,14 @@ from opsgenie.config import Configuration
 from opsgenie.errors import OpsGenieError
 
 #Send data to graphite
-def send_data_graphite(schema, backend_addr, backend_port, value): 
+def send_data_graphite(schema, backend_addr, backend_port, value, key_name): 
 	 g=graphitesend.init(graphite_server=backend_addr, graphite_port=backend_port, lowercase_metric_names=True, system_name='', prefix='')
-	 g.send(schema+"."+"count_closed",value)
-	 g.send(schema+"."+"count_open",value)
+	 g.send(schema+"."+key_name,value)
 
 #Variables declarations
 config = Configuration(apikey="150ccb97-29c9-4e01-9a63-3825948b83a2")
 client = OpsGenie(config)
-customer="customer_meilleursagents"
+customer=""
 count_closed=0
 count_open=0
 
@@ -26,6 +25,16 @@ parser.add_argument('-b', help='backend to send your data, default is graphite',
 parser.add_argument('-s', help='schema to stored your data in graphite\n for example: customer.app.env.servername', default="test.test.prod.opsgenie")
 parser.add_argument('-H', help='host of your backend, default is loaclhost', default="localhost")
 parser.add_argument('-P', type=int, help='port of your backend, default is graphite port', default=2003)
+parser.add_argument('-c', help='customer you want to querry',required=True)
+
+#Feeding variables
+args = parser.parse_args()
+backend=args.b
+schema=args.s
+backend_addr=args.H
+backend_port=args.p
+customer=args.c
+
 
 #Querry infos from opsgeinie
 try:
@@ -40,3 +49,7 @@ try:
 				count_open+=get_alert_response.count
 except OpsGenieError as err:
 	print "[ERROR]", err.message
+
+if backend == "graphite":
+	send_data_graphite(schema, backend_addr, backend_port, count_closed, "count_closed")
+	send_data_graphite(schema, backend_addr, backend_port, count_open , "count_open")
