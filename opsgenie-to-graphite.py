@@ -13,14 +13,13 @@ def send_data_graphite(schema, backend_addr, backend_port, value, key_name):
 	 g.send(schema+"."+key_name,value)
 
 #Variables declarations
-config = Configuration(apikey="150ccb97-29c9-4e01-9a63-3825948b83a2")
-client = OpsGenie(config)
 customer=""
 count_closed=0
 count_open=0
 
 #Parsing arguments
 parser = argparse.ArgumentParser(description='Querry datas from Opsgenie and send thel to graphite.', add_help=True)
+parser.add_argument('-k', help='your opsgenie apikey', required=True)
 parser.add_argument('-b', help='backend to send your data, default is graphite', default="graphite")
 parser.add_argument('-s', help='schema to stored your data in graphite\n for example: customer.app.env.servername', default="test.test.prod.host.opsgenie")
 parser.add_argument('-H', help='host of your backend, default is loaclhost', default="localhost")
@@ -29,6 +28,8 @@ parser.add_argument('-c', help='customer you want to querry',required=True)
 
 #Feeding variables
 args = parser.parse_args()
+config = Configuration(apikey=args.k)
+client = OpsGenie(config)
 backend=args.b
 schema=args.s
 backend_addr=args.H
