@@ -44,12 +44,12 @@ try:
 		request = GetAlertRequest(id=alert.id)
 		get_alert_response = client.alert.get_alert(request)
 		if customer in  get_alert_response.tags:
-			if get_alert_response.system_data.has_key('closedBy'):
+			if "closedBy" in get_alert_response.system_data:
 				count_closed+=get_alert_response.count
 			else:
 				count_open+=1
 except OpsGenieError as err:
-	print "[ERROR]", err.message
+	print ("[ERROR]"), err.message
 
 if backend == "graphite":
 	send_data_graphite(schema, backend_addr, backend_port, count_closed, "count_closed")
